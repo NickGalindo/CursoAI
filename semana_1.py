@@ -27,7 +27,7 @@ class GarlicBread:
 @dataclass
 class Order:
     order_num: int
-    items: List[Any] = field(default_factory=lambda : GarlicBread(toasted=True))
+    items: List[Any] = field(default_factory = lambda : GarlicBread(toasted=True))
     
     def __post_init__(self):
         print(f"initializing order num: {self.order_num}")
