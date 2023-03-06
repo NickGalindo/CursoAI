@@ -27,7 +27,7 @@ class GarlicBread:
 @dataclass
 class Order:
     order_num: int
-    items: List[Any] = field(default_factory = lambda : GarlicBread(toasted=True))
+    items: List[Any] = field(default_factory = lambda : [GarlicBread(toasted=True)])
     
     def __post_init__(self):
         print(f"initializing order num: {self.order_num}")
@@ -59,7 +59,7 @@ data: Dict[str, List] = {
 
 data_df = pd.DataFrame(data)
 
-for row in pd.iterrows(data_df):
+for row in data_df.iterrows():
     pprint(row)
 
 # LOAD DATA
@@ -74,11 +74,14 @@ electric_motor_data = electric_motor_data[electric_motor_data["u_q"] > 0]
 print(electric_motor_data[:10])
 
 print(electric_motor_data["u_q"].value_counts(dropna=False))
+print(electric_motor_data.columns)
 
-print(electric_motor_data.group_by(["u_q", "coolant"]).sum())
+print(electric_motor_data.groupby(["u_q", "coolant"]).sum())
 
 # PLOTTING DATA
-sub_electric_motor_data = electric_motor_data.group_by("coolant")["torque"].mean()
+sub_electric_motor_data = electric_motor_data.groupby("coolant")["torque"].mean().reset_index()
+
+print(sub_electric_motor_data)
 
 x = sub_electric_motor_data["coolant"].to_numpy()
 y = sub_electric_motor_data["torque"].to_numpy()
@@ -106,11 +109,13 @@ print(t_data.dtype)
 print(t_data.device)
 
 if torch.cuda.is_available():
-    t_data = t_data.to("cuda")
+    t_data = t_data.to("cuda:1")
     print(t_data.device)
 
 t_new = torch.zeros(data.shape)
 t_new[:,0] = 1
 
+t_data = t_data.double()
+
 print(t_data * t_new)
-print(t_data @ t_new.T)
+print(t_data @ t_new.mT.double())
