@@ -2,6 +2,34 @@ import torch
 import numpy as np
 import pandas as pd
 from torch.optim import optimizer
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Linear regression
+xd = np.array([[1], [2], [3], [4]])
+yd = xd*2 + 3
+reg = LinearRegression()
+reg.fit(xd, yd)
+
+plt.plot([i[0] for i in xd], [i[0] for i in yd], color="blue", marker="o", linestyle="None")
+plt.show()
+
+x_new = [[5], [6], [7], [8]]
+pr = reg.predict(np.array(x_new))
+
+plt.plot([i[0] for i in xd], [i[0] for i in yd], color="blue", marker="o", linestyle="None")
+plt.plot([i[0] for i in x_new], [i[0] for i in pr], color="red", marker="o")
+plt.show()
+
+# Mean-squared error
+y_true = [3, -0.5, 2, 7]
+y_pred = [2.5, 0.0, 2, 8]
+print(mean_squared_error(y_true, y_pred))
+
+
+# EXERCISE: Calculate mean squared error for the linear regression we did before
+
 
 # Basic Neural Network meant to recieve 32x32 images (Built for MNIST dataset)
 class Brain(torch.nn.Module): # torch.nn.Module is a base class for all neuronal networks in pytroch
@@ -70,3 +98,4 @@ for i in range(3):
     loss = loss_func(out, dum) # get the loss between predicted and target data
     loss.backward() # Calculate the backwards propagation gradients
     optim.step() # Backwards propagate
+
