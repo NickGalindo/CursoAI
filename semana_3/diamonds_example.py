@@ -36,7 +36,7 @@ def poly_regression(x: np.ndarray, y: np.ndarray, k_test: np.ndarray, degree: in
     k_test = k_test.reshape(-1)
     pred = pred.reshape(-1)
 
-    plt.scatter(x, y, s=10, color="red")
+    plt.scatter(x, y, s=1, color="red")
     plt.plot(k_test, pred, color="blue")
     plt.show()
 
@@ -50,10 +50,12 @@ df = df[["price", "x", "y", "z"]]
 df.dropna()
 print(df.describe())
 
+
 # Calculate volume
 df["volume"] = df["x"]*df["y"]*df["z"]
 df = df[["price", "volume"]]
 print(df.describe())
+
 
 df = df[df["volume"] <= 500]
 df = df[df["volume"] >= 5]
@@ -67,7 +69,7 @@ volume, price = zip(*sorted(zip(volume, price), key= lambda k: k[0]))
 volume = np.array(volume)
 price = np.array(price)
 
-plt.scatter(volume, price, s=10, color="red")
+plt.scatter(volume, price, s=1, color="red")
 plt.show()
 
 # Reshaoe for training
@@ -79,3 +81,4 @@ test_range = test_range.reshape(-1, 1)
 poly_regression(m_volume, m_price, test_range, degree=1)
 poly_regression(m_volume, m_price, test_range, degree=2)
 poly_regression(m_volume, m_price, test_range, degree=3)
+poly_regression(m_volume, m_price, test_range, degree=30)

@@ -40,7 +40,7 @@ def gaussianProcessBayesianOptimize(f: Callable, range: Tuple[float, float]): # 
     res = gp_minimize(
         f,
         [range],
-        acq_func="EI",
+        acq_func="gp_hedge",
         n_calls=50,
         n_random_starts=15,
     )
