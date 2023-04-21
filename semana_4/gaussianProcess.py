@@ -12,22 +12,22 @@ def plot_gpr_samples(gpr_model, n_samples):
     X = x.reshape(-1, 1)
 
     y_mean, y_std = gpr_model.predict(X, return_std=True)
-    #y_samples = gpr_model.sample_y(X, n_samples)
+    y_samples = gpr_model.sample_y(X, n_samples)
 
-    #for idx, single_prior in enumerate(y_samples.T):
-    #    ax.plot(
-    #        x,
-    #        single_prior,
-    #        linestyle="--",
-    #        alpha=0.7,
-    #        label=f"Sampled function #{idx + 1}",
-    #    )
+    for idx, single_prior in enumerate(y_samples.T):
+        plt.plot(
+            x,
+            single_prior,
+            linestyle="--",
+            alpha=0.9,
+            label=f"Sampled function #{idx + 1}",
+        )
     plt.plot(x, y_mean, color="orange", label="Mean")
     plt.fill_between(
         x,
         y_mean - y_std,
         y_mean + y_std,
-        alpha=0.1,
+        alpha=0.5,
         color="orange",
         label=r"$\pm$ 1 std. dev.",
     )
@@ -41,9 +41,9 @@ kernel = 1.0 * Matern(length_scale=1.0, nu=1.5)
 gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=10)
 gp.fit(x.reshape(-1, 1), y)
 
-plt.scatter(x, y, c="black")
-plot_gpr_samples(gp, 10)
-plt.show()
+#plt.scatter(x, y, c="black")
+#plot_gpr_samples(gp, 10)
+#plt.show()
 
 
 
@@ -54,14 +54,12 @@ def f(x):
 gp = gp_minimize(
     f,
     [(0, 15)],
-    acq_func="EI",
-    n_calls=5,
+    acq_func="gp_hedge",
+    n_calls=20,
     n_random_starts=5
 )
 
 print(gp.x_iters)
 print(gp.func_vals)
-
-plt.scatter(np.array(gp.x_iters).reshape(-1, 1), gp.func_vals)
-plot_gpr_samples(gp.models[-1], 10)
-plt.show()
+print(gp)
+print(gp.fun)
