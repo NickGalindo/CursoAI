@@ -92,6 +92,7 @@ class Network:
     def fit(self, x_train: np.ndarray, y_train: np.ndarray, epochs: int, learning_rate: np.float64) -> None:
         assert(isinstance(self.loss, Callable))
         assert(isinstance(self.loss_prime, Callable))
+
         samples: int = len(x_train)
 
         for i in range(epochs):
